@@ -1,7 +1,16 @@
+import 'package:flutteliculas/models/models.dart';
 import 'package:flutter/material.dart';
 
 class MovieSlider extends StatelessWidget {
-  const MovieSlider({Key? key}) : super(key: key);
+
+  final List<Movie> movies;
+  final String? titleSlider;
+
+  const MovieSlider({
+    Key? key,
+    required this.movies,
+    this.titleSlider
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -11,17 +20,19 @@ class MovieSlider extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20),
-            child: Text('Populares', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),),
-          ),
+          if (titleSlider != null) 
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              child: Text( titleSlider!, style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),),
+            ),
 
-          SizedBox(height: 5),
+
+          const SizedBox(height: 5),
           Expanded(
             child: ListView.builder(
               scrollDirection: Axis.horizontal,
-               itemCount: 20,
-               itemBuilder: (_, int index) => _MoviePoster()
+               itemCount: movies.length,
+               itemBuilder: (_, int index) => _MoviePoster( movie: movies[index])
             ),
           )
         ],
@@ -31,7 +42,11 @@ class MovieSlider extends StatelessWidget {
 }
 
 class _MoviePoster extends StatelessWidget {
-  const _MoviePoster({Key? key}) : super(key: key);
+
+
+  final Movie movie;
+
+  const _MoviePoster({Key? key, required this.movie}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -47,16 +62,16 @@ class _MoviePoster extends StatelessWidget {
                 borderRadius: BorderRadius.circular(20 ),
                 child: FadeInImage(
                   placeholder: AssetImage('assets/no-image.jpg'), 
-                  image: NetworkImage('https://via.placeholder.com/300x400'),
+                  image: NetworkImage(movie.fullPosterImg),
                   width: 130,
                   height: 190,
                   fit: BoxFit.cover,
                 ),
               ),
             ),
-            SizedBox(height: 5),
+            const SizedBox(height: 5),
             Text(
-              'Star Wars: el retorno del Jedi y toda la santa y que mas',
+              movie.title,
               maxLines: 2,
               overflow: TextOverflow.ellipsis,
               textAlign: TextAlign.center,
